@@ -1,1 +1,3 @@
-export default function CadastroPage() {}
+export default function CadastroPage() {
+    <></>
+}
