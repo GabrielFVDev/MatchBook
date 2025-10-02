@@ -1,19 +1,20 @@
-import {
-  PageWrapper,
-  BookContainer,
-  LeftPage,
-  RightPage,
-  Title,
-  Form,
-  FormRow,
-  InputGroup,
-  Label,
-  Input,
-  Button,
-  CheckboxGroup,
-  Checkbox,
-} from "./styles.module.jsx";
+
+import { PageWrapper } from "../../../components/PageWrapper";
+import { BookContainer } from "../../../components/BookContainer";
+import { LeftPage } from "../../../components/LeftPage";
+import { RightPage } from "../../../components/RightPage";
+import { Title } from "../../../components/Title";
+import { Form } from "../../../components/Form";
+import { FormRow } from "../../../components/FormRow";
+import { InputGroup } from "../../../components/InputGroup";
+import { Label } from "../../../components/Label";
+import { Input } from "../../../components/Input";
+import { Button } from "../../../components/Button";
+import { CheckboxGroup } from "../../../components/CheckboxGroup";
+import { Checkbox } from "../../../components/Checkbox";
+
 import { Link } from "react-router-dom";
+
 
 export default function CadastroPage() {
   return (

@@ -1,22 +1,24 @@
-import {
-  PageWrapper,
-  BookContainer,
-  LeftPage,
-  RightPage,
-  Title,
-  Form,
-  InputGroup,
-  Label,
-  Input,
-  Button,
-  IllustrationContainer,
-  BookStack,
-  Book,
-  QuoteText,
-  LinkWrapper,
-  StyledLink,
+
+import { PageWrapper } from "../../../components/PageWrapper";
+import { BookContainer } from "../../../components/BookContainer";
+import { LeftPage } from "../../../components/LeftPage";
+import { RightPage } from "../../../components/RightPage";
+import { Title } from "../../../components/Title";
+import { Form } from "../../../components/Form";
+import { InputGroup } from "../../../components/InputGroup";
+import { Label } from "../../../components/Label";
+import { Input } from "../../../components/Input";
+import { Button } from "../../../components/Button";
+import { StyledLink } from "../../../components/StyledLink";
+import { LinkWrapper } from "../../../components/LinkWrapper";
+import { 
+  IllustrationContainer, 
+  BookStack, 
+  Book, 
+  QuoteText 
 } from "./styles.module.jsx";
-import { Link } from "react-router-dom";
+
+
 
 export default function LoginPage() {
   return (
@@ -45,8 +47,7 @@ export default function LoginPage() {
             </InputGroup>
             <Button type="submit">Entrar na Biblioteca</Button>
             <LinkWrapper>
-              <StyledLink as={Link} to="/cadastro">Criar uma conta</StyledLink>
-              <StyledLink href="#">Esqueceu a senha?</StyledLink>
+              <StyledLink to="/cadastro">Criar uma conta</StyledLink>
             </LinkWrapper>
           </Form>
         </LeftPage>
