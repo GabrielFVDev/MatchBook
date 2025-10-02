@@ -42,3 +42,25 @@ export const IconWrapper = styled.div`
         transform: translateY(-2px);
     }
 `;
+
+export const NavigationContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 15px;
+`;
+
+export const LogoutButton = styled.button`
+    background-color: #d4a574;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #c09060;
+        transform: translateY(-2px);
+    }
+`;

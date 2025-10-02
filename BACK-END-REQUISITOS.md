@@ -190,6 +190,7 @@ A aplicação estará disponível em `http://localhost:8080`
 | nivel_leitura         | VARCHAR(50)  | Nível de leitura do usuário     |
 | receber_recomendacoes | BOOLEAN      | Se deseja receber recomendações |
 | data_cadastro         | Date         | Quando foi cadastrado           |
+| fotoUrl               | VARCHAR      | Aleatoria                       |
 
 ### `livro`
 

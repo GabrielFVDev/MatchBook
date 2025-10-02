@@ -1,4 +1,3 @@
-
 import { PageWrapper } from "../../components/PageWrapper";
 import Header from "../../components/Header";
 import { Title } from "../../components/Title";
@@ -15,7 +14,6 @@ import {
     StatBox 
 } from "./styles.module.jsx";
 
-// Mock de dados do usuário - substitua com dados reais da API
 const user = {
     nome: "Gabriel",
     email: "gabriel@example.com",
