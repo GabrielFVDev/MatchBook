@@ -1,9 +1,8 @@
-
 import { PageWrapper } from "../../../components/PageWrapper";
 import { BookContainer } from "../../../components/BookContainer";
 import { LeftPage } from "../../../components/LeftPage";
 import { RightPage } from "../../../components/RightPage";
-import { Title } from "../../../components/Title";
+import { AnotherTitle } from "../../../components/Title";
 import { Form } from "../../../components/Form";
 import { InputGroup } from "../../../components/InputGroup";
 import { Label } from "../../../components/Label";
@@ -17,16 +16,25 @@ import {
   Book, 
   QuoteText 
 } from "./styles.module.jsx";
+import { useNavigate } from "react-router-dom";
 
 
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate("/home");
+  };
+
+
   return (
     <PageWrapper>
       <BookContainer>
         <LeftPage>
-          <Title>Bem-vindo</Title>
-          <Form onSubmit={(e) => e.preventDefault()}>
+          <AnotherTitle>Bem-vindo</AnotherTitle>
+          <Form onSubmit={handleSubmit}>
             <InputGroup>
               <Label htmlFor="email">Email</Label>
               <Input 

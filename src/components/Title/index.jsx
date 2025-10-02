@@ -10,3 +10,13 @@ export const Title = styled.h1`
   font-weight: 600;
   text-shadow: 0 2px 4px rgba(107, 68, 35, 0.1);
 `;
+
+export const AnotherTitle = styled.h2`
+  font-size: 3em;
+  margin-bottom: 30px;
+  text-align: left;
+  color: #e7e7e7ff;
+  font-family: 'Crimson Text', serif;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(107, 68, 35, 0.1);
+`

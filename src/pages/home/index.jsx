@@ -1,12 +1,7 @@
+
+import Header from "../../components/Header";
 import {
   PageContainer,
-  Header,
-  Logo,
-  SearchContainer,
-  SearchInput,
-  SearchIcon,
-  ProfileSection,
-  ProfileButton,
   MainContent,
   BookDiscoveryCard,
   DiscoveryTitle,
@@ -15,28 +10,12 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from './styles.module.jsx';
-import { FaSearch, FaUser, FaQuestion } from 'react-icons/fa';
+import { FaQuestion } from 'react-icons/fa';
 
-export function HomePage() {
+export default function HomePage() {
     return (
         <PageContainer>
-            <Header>
-                <Logo>MatchBook</Logo>
-                <SearchContainer>
-                    <SearchInput 
-                        type="text" 
-                        placeholder="Buscar livros, autores, gêneros..."
-                    />
-                    <SearchIcon>
-                        <FaSearch />
-                    </SearchIcon>
-                </SearchContainer>
-                <ProfileSection>
-                    <ProfileButton>
-                        <FaUser />
-                    </ProfileButton>
-                </ProfileSection>
-            </Header>
+            <Header />
             
             <MainContent>
                 <BookDiscoveryCard>
@@ -55,3 +34,4 @@ export function HomePage() {
         </PageContainer>
     );
 }
+
