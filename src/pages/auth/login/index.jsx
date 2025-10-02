@@ -13,7 +13,10 @@ import {
   BookStack,
   Book,
   QuoteText,
+  LinkWrapper,
+  StyledLink,
 } from "./styles.module.jsx";
+import { Link } from "react-router-dom";
 
 export default function LoginPage() {
   return (
@@ -41,9 +44,11 @@ export default function LoginPage() {
               />
             </InputGroup>
             <Button type="submit">Entrar na Biblioteca</Button>
+            <LinkWrapper>
+              <StyledLink as={Link} to="/cadastro">Criar uma conta</StyledLink>
+              <StyledLink href="#">Esqueceu a senha?</StyledLink>
+            </LinkWrapper>
           </Form>
-          
-
         </LeftPage>
         
         <RightPage>
