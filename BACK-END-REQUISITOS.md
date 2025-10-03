@@ -90,6 +90,101 @@ A aplicação estará disponível em `http://localhost:8080`
 
 ## 📡 API Endpoints
 
+### 👤 Usuários
+
+#### `POST /api/usuario/create`
+
+**Descrição:** Cria um novo usuário no sistema  
+**Body (JSON):**
+
+```json
+{
+  "nome": "Gabriel Silva",
+  "email": "gabriel@email.com",
+  "senha": "minhasenha123",
+  "dataNascimento": "1995-05-15",
+  "generoFavorito": "Ficção Científica",
+  "livrosLidos": 25,
+  "autorPreferido": "Isaac Asimov",
+  "nivelLeitura": "Avançado",
+  "receberRecomendacoes": true,
+  "biografia": "Leitor apaixonado por ficção científica"
+}
+```
+
+**Resposta:** Usuário criado com `foto_url` gerada automaticamente
+
+#### `PUT /api/usuario/update`
+
+**Descrição:** Atualiza dados de um usuário existente  
+**Body (JSON):** Mesmo formato do create, incluindo o `id`
+
+#### `PUT /api/usuario/{id}/foto`
+
+**Descrição:** Atualiza apenas a foto do usuário  
+**Parâmetros:** `id` (Integer) - ID do usuário  
+**Body (String):** URL da nova foto
+
+```json
+"https://exemplo.com/minha-foto.jpg"
+```
+
+#### `GET /api/usuario/get?id={id}`
+
+**Descrição:** Busca um usuário específico  
+**Parâmetros:** `id` (Integer) - ID do usuário
+
+#### `GET /api/usuario/all`
+
+**Descrição:** Lista todos os usuários cadastrados
+
+#### `DELETE /api/usuario/delete?id={id}`
+
+**Descrição:** Remove um usuário do sistema  
+**Parâmetros:** `id` (Integer) - ID do usuário
+
+### 📚 Livros
+
+#### `POST /api/livro/create`
+
+**Descrição:** Cadastra um novo livro no sistema  
+**Body (JSON):**
+
+```json
+{
+  "titulo": "Fundação",
+  "autor": "Isaac Asimov",
+  "editora": "Aleph",
+  "genero": "Ficção Científica",
+  "anoPublicacao": 1951,
+  "numeroPaginas": 244,
+  "idioma": "Português",
+  "isbn": "978-85-7665-389-8",
+  "sinopse": "A saga épica da Fundação...",
+  "capaUrl": "https://exemplo.com/capa.jpg",
+  "disponivel": true
+}
+```
+
+#### `PUT /api/livro/update`
+
+**Descrição:** Atualiza dados de um livro existente  
+**Body (JSON):** Mesmo formato do create, incluindo o `id`
+
+#### `GET /api/livro/get?id={id}`
+
+**Descrição:** Busca um livro específico  
+**Parâmetros:** `id` (Integer) - ID do livro
+
+#### `GET /api/livro/all`
+
+**Descrição:** Lista todos os livros cadastrados
+
+#### `DELETE /api/livro/delete?id={id}`
+
+**Descrição:** Remove um livro do sistema  
+**Parâmetros:** `id` (Integer) - ID do livro
+
 ### 🎯 Recomendações
 
 #### `GET /api/recomendacao/getRecomendacao/{idUsuario}`
@@ -190,18 +285,18 @@ A aplicação estará disponível em `http://localhost:8080`
 | nivel_leitura         | VARCHAR(50)  | Nível de leitura do usuário     |
 | receber_recomendacoes | BOOLEAN      | Se deseja receber recomendações |
 | data_cadastro         | Date         | Quando foi cadastrado           |
-| fotoUrl               | VARCHAR      | Aleatoria                       |
+| foto_url              | VARCHAR(500) | URL da foto do usuário          |
 
 ### `livro`
 
 | Campo          | Tipo         | Descrição               |
-| -------------- | ------------ | ----------------------- |
+| -------------- | ------------ | ----------------------- | ------------------- |
 | id             | INT (PK, AI) | Identificador do livro  |
 | titulo         | VARCHAR(200) | Título do livro         |
 | autor          | VARCHAR(100) | Autor do livro          |
 | editora        | VARCHAR(100) | Editora do livro        |
 | genero         | VARCHAR(50)  | Gênero do livro         |
-| ano_publicacao | INT          | Ano de publicação       |
+| ano_publicacao | INT          | Ano de publicação       | ![img.png](img.png) |
 | numero_paginas | INT          | Número de páginas       |
 | idioma         | VARCHAR(50)  | Idioma do livro         |
 | isbn           | VARCHAR(20)  | Código ISBN             |

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { PageWrapper } from "../../../components/PageWrapper";
 import { BookContainer } from "../../../components/BookContainer";
 import { LeftPage } from "../../../components/LeftPage";
@@ -17,15 +18,62 @@ import {
   QuoteText 
 } from "./styles.module.jsx";
 import { useNavigate } from "react-router-dom";
-
-
+import { useAuth } from "../../../hooks/useAuth";
+import { NotificationModal } from "../../../components/NotificationModal";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { login, loading, error, setError } = useAuth();
+  
+  const [formData, setFormData] = useState({
+    email: "",
+    senha: ""
+  });
 
-  const handleSubmit = (e) => {
+  const [showModal, setShowModal] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    type: 'error',
+    title: '',
+    message: ''
+  });
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+    // Limpa erro quando usuário começa a digitar
+    if (error) {
+      setError(null);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/home");
+    
+    if (!formData.email || !formData.senha) {
+      setModalConfig({
+        type: 'error',
+        title: 'Campos Obrigatórios ⚠️',
+        message: 'Por favor, preencha seu email e senha para continuar.'
+      });
+      setShowModal(true);
+      return;
+    }
+
+    const resultado = await login(formData.email, formData.senha);
+    
+    if (resultado.success) {
+      navigate("/home");
+    } else {
+      setModalConfig({
+        type: 'error',
+        title: 'Erro no Login ❌',
+        message: resultado.error || 'Verifique suas credenciais e tente novamente.'
+      });
+      setShowModal(true);
+    }
   };
 
 
@@ -40,20 +88,26 @@ export default function LoginPage() {
               <Input 
                 id="email"
                 type="email" 
-                placeholder="seu@email.com" 
+                placeholder="seu@email.com"
+                value={formData.email}
+                onChange={handleInputChange}
                 required 
               />
             </InputGroup>
             <InputGroup>
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="senha">Senha</Label>
               <Input 
-                id="password"
+                id="senha"
                 type="password" 
-                placeholder="••••••••" 
+                placeholder="••••••••"
+                value={formData.senha}
+                onChange={handleInputChange}
                 required 
               />
             </InputGroup>
-            <Button type="submit">Entrar na Biblioteca</Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? "Entrando..." : "Entrar na Biblioteca"}
+            </Button>
             <LinkWrapper>
               <StyledLink to="/cadastro">Criar uma conta</StyledLink>
             </LinkWrapper>
@@ -73,6 +127,14 @@ export default function LoginPage() {
           </IllustrationContainer>
         </RightPage>
       </BookContainer>
+      
+      <NotificationModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        type={modalConfig.type}
+        title={modalConfig.title}
+        message={modalConfig.message}
+      />
     </PageWrapper>
   );
 }
