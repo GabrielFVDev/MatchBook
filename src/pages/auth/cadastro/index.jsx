@@ -11,12 +11,12 @@ import { InputGroup } from "../../../components/InputGroup";
 import { Label } from "../../../components/Label";
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";
-import { CheckboxGroup } from "../../../components/CheckboxGroup";
 import { Checkbox } from "../../../components/Checkbox";
 import { Link, useNavigate } from "react-router-dom";
 import { useRegister } from "../../../hooks/useAuth";
 import { validarEmail, normalizarDadosUsuario } from "../../../utils/formatters";
 import { NotificationModal } from "../../../components/NotificationModal";
+import styles from "./styles.module.css";
 
 export default function CadastroPage() {
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ export default function CadastroPage() {
     nome: "",
     email: "",
     senha: "",
+    confirmarSenha: "",
     dataNascimento: "",
     generoFavorito: "",
     livrosLidos: 0,
@@ -54,27 +55,66 @@ export default function CadastroPage() {
     }
   };
 
+  // Função para verificar se as senhas coincidem
+  const senhasConferem = () => {
+    return formData.senha && formData.confirmarSenha && 
+           formData.senha === formData.confirmarSenha;
+  };
+
+  // Função para verificar se a senha tem o tamanho mínimo
+  const senhaValida = () => {
+    return formData.senha && formData.senha.length >= 6;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Validações básicas
-    if (!formData.nome || !formData.email || !formData.senha) {
-      setError("Por favor, preencha todos os campos obrigatórios");
+    if (!formData.nome || !formData.email || !formData.senha || !formData.confirmarSenha) {
+      setModalConfig({
+        type: 'error',
+        title: 'Campos Obrigatórios ⚠️',
+        message: 'Por favor, preencha todos os campos obrigatórios (nome, email, senha e confirmação de senha).'
+      });
+      setShowModal(true);
       return;
     }
 
     if (!validarEmail(formData.email)) {
-      setError("Por favor, insira um email válido");
+      setModalConfig({
+        type: 'error',
+        title: 'Email Inválido ⚠️',
+        message: 'Por favor, insira um email válido.'
+      });
+      setShowModal(true);
       return;
     }
 
     if (formData.senha.length < 6) {
-      setError("A senha deve ter pelo menos 6 caracteres");
+      setModalConfig({
+        type: 'error',
+        title: 'Senha Muito Curta ⚠️',
+        message: 'A senha deve ter pelo menos 6 caracteres.'
+      });
+      setShowModal(true);
       return;
     }
 
+    if (formData.senha !== formData.confirmarSenha) {
+      setModalConfig({
+        type: 'error',
+        title: 'Senhas Não Coincidem ⚠️',
+        message: 'A senha e a confirmação de senha devem ser iguais.'
+      });
+      setShowModal(true);
+      return;
+    }
+
+    // Remove confirmação de senha dos dados a serem enviados
+    const { confirmarSenha, ...dadosParaEnvio } = formData;
+    
     // Normaliza e prepara dados para envio
-    const userData = normalizarDadosUsuario(formData);
+    const userData = normalizarDadosUsuario(dadosParaEnvio);
 
     console.log("Enviando dados:", userData);
 
@@ -111,137 +151,205 @@ export default function CadastroPage() {
     <PageWrapper>
       <BookContainer>
         <LeftPage>
-          <Title>Crie sua Conta</Title>
-          
-          <FormRow>
-            <InputGroup>
-              <Label htmlFor="nome">Nome Completo *</Label>
-              <Input 
-                id="nome"
-                type="text" 
-                placeholder="Seu nome completo"
-                value={formData.nome}
-                onChange={handleInputChange}
-                required 
-              />
-            </InputGroup>
-          </FormRow>
-          <FormRow>
-            <InputGroup>
-              <Label htmlFor="email">Email *</Label>
-              <Input 
-                id="email"
-                type="email" 
-                placeholder="seu@email.com"
-                value={formData.email}
-                onChange={handleInputChange}
-                required 
-              />
-            </InputGroup>
-          </FormRow>
-          <FormRow>
-            <InputGroup>
-              <Label htmlFor="senha">Senha * (mín. 6 caracteres)</Label>
-              <Input 
-                id="senha"
-                type="password" 
-                placeholder="••••••••"
-                value={formData.senha}
-                onChange={handleInputChange}
-                required 
-              />
-            </InputGroup>
-          </FormRow>
-          <FormRow>
-            <InputGroup>
-              <Label htmlFor="dataNascimento">Data de Nascimento</Label>
-              <Input 
-                id="dataNascimento"
-                type="date"
-                value={formData.dataNascimento}
-                onChange={handleInputChange}
-              />
-            </InputGroup>
-          </FormRow>
+          <div className={styles.formSection}>
+            <div className={styles.sectionHeader}>
+              <Title className={styles.sectionTitle}>Crie sua Conta</Title>
+              <p className={styles.sectionSubtitle}>Preencha seus dados pessoais</p>
+            </div>
+            
+            <div className={styles.fieldGroup}>
+              <FormRow className={styles.formRow}>
+                <InputGroup>
+                  <Label htmlFor="nome">Nome Completo *</Label>
+                  <Input 
+                    id="nome"
+                    type="text" 
+                    placeholder="Seu nome completo"
+                    value={formData.nome}
+                    onChange={handleInputChange}
+                    required 
+                  />
+                </InputGroup>
+              </FormRow>
+              
+              <FormRow className={styles.formRow}>
+                <InputGroup>
+                  <Label htmlFor="email">Email *</Label>
+                  <Input 
+                    id="email"
+                    type="email" 
+                    placeholder="seu@email.com"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required 
+                  />
+                </InputGroup>
+              </FormRow>
+              
+              <FormRow className={styles.formRow}>
+                <InputGroup>
+                  <Label htmlFor="senha">Senha * (mín. 6 caracteres)</Label>
+                  <Input 
+                    id="senha"
+                    type="password" 
+                    placeholder="••••••••"
+                    value={formData.senha}
+                    onChange={handleInputChange}
+                    className={`${styles.passwordInput} ${
+                      formData.senha ? (senhaValida() ? styles.valid : styles.invalid) : ''
+                    }`}
+                    required 
+                  />
+                  {formData.senha && (
+                    <div className={`${styles.validationMessage} ${
+                      senhaValida() ? styles.success : styles.error
+                    }`}>
+                      {senhaValida() ? '✓ Senha válida' : '✗ Muito curta (mín. 6 caracteres)'}
+                    </div>
+                  )}
+                </InputGroup>
+              </FormRow>
+              
+              <FormRow className={styles.formRow}>
+                <InputGroup>
+                  <Label htmlFor="confirmarSenha">Confirmar Senha *</Label>
+                  <Input 
+                    id="confirmarSenha"
+                    type="password" 
+                    placeholder="Repita sua senha"
+                    value={formData.confirmarSenha}
+                    onChange={handleInputChange}
+                    className={`${styles.passwordInput} ${
+                      formData.confirmarSenha ? (senhasConferem() ? styles.valid : styles.invalid) : ''
+                    }`}
+                    required 
+                  />
+                  {formData.confirmarSenha && (
+                    <div className={`${styles.validationMessage} ${
+                      senhasConferem() ? styles.success : styles.error
+                    }`}>
+                      {senhasConferem() ? '✓ Senhas coincidem' : '✗ Senhas não coincidem'}
+                    </div>
+                  )}
+                </InputGroup>
+              </FormRow>
+              
+              <FormRow className={styles.formRow}>
+                <InputGroup>
+                  <Label htmlFor="dataNascimento">Data de Nascimento</Label>
+                  <Input 
+                    id="dataNascimento"
+                    type="date"
+                    value={formData.dataNascimento}
+                    onChange={handleInputChange}
+                  />
+                </InputGroup>
+              </FormRow>
+            </div>
+          </div>
         </LeftPage>
         
         <RightPage>
-          <Form onSubmit={handleSubmit}>
-            <FormRow>
-              <InputGroup>
-                <Label htmlFor="generoFavorito">Gênero Favorito</Label>
-                <Input 
-                  id="generoFavorito"
-                  type="text" 
-                  placeholder="Ex: Ficção Científica, Romance, etc."
-                  value={formData.generoFavorito}
+          <div className={styles.rightPageContainer}>
+            <Form onSubmit={handleSubmit}>
+              <div className={`${styles.formSection} ${styles.compactSpacing}`}>
+                <div className={styles.sectionHeader}>
+                  <p className={styles.sectionSubtitle}>Conte-nos sobre seus gostos literários</p>
+                </div>
+                
+                <div className={`${styles.fieldGroup} ${styles.tightSpacing}`}>
+                <FormRow className={styles.formRow}>
+                  <InputGroup>
+                    <Label htmlFor="generoFavorito">Gênero Favorito</Label>
+                    <Input 
+                      id="generoFavorito"
+                      type="text" 
+                      placeholder="Ex: Ficção Científica, Romance, etc."
+                      value={formData.generoFavorito}
+                      onChange={handleInputChange}
+                    />
+                  </InputGroup>
+                </FormRow>
+                
+                <FormRow className={styles.formRow}>
+                  <InputGroup>
+                    <Label htmlFor="livrosLidos">Livros Lidos (Quantidade)</Label>
+                    <Input 
+                      id="livrosLidos"
+                      type="number" 
+                      placeholder="0"
+                      min="0"
+                      value={formData.livrosLidos}
+                      onChange={handleInputChange}
+                    />
+                  </InputGroup>
+                </FormRow>
+                
+                <FormRow className={styles.formRow}>
+                  <InputGroup>
+                    <Label htmlFor="autorPreferido">Autor Preferido</Label>
+                    <Input 
+                      id="autorPreferido"
+                      type="text" 
+                      placeholder="Ex: Machado de Assis, Agatha Christie, etc."
+                      value={formData.autorPreferido}
+                      onChange={handleInputChange}
+                    />
+                  </InputGroup>
+                </FormRow>
+                
+                <FormRow className={styles.formRow}>
+                  <InputGroup>
+                    <Label htmlFor="nivelLeitura">Nível de Leitura</Label>
+                    <Input 
+                      id="nivelLeitura"
+                      type="text" 
+                      placeholder="Iniciante, Intermediário ou Avançado"
+                      value={formData.nivelLeitura}
+                      onChange={handleInputChange}
+                    />
+                  </InputGroup>
+                </FormRow>
+                
+                <FormRow className={styles.formRow}>
+                  <InputGroup>
+                    <Label htmlFor="biografia">Biografia (Opcional)</Label>
+                    <Input 
+                      id="biografia"
+                      type="text" 
+                      placeholder="Conte um pouco sobre seus gostos literários..."
+                      value={formData.biografia}
+                      onChange={handleInputChange}
+                    />
+                  </InputGroup>
+                </FormRow>
+              </div>
+              
+              <div className={styles.checkboxContainer}>
+                <Checkbox 
+                  id="receberRecomendacoes"
+                  type="checkbox"
+                  checked={formData.receberRecomendacoes}
                   onChange={handleInputChange}
                 />
-              </InputGroup>
-            </FormRow>
-            <FormRow>
-              <InputGroup>
-                <Label htmlFor="livrosLidos">Livros Lidos (Quantidade)</Label>
-                <Input 
-                  id="livrosLidos"
-                  type="number" 
-                  placeholder="0"
-                  min="0"
-                  value={formData.livrosLidos}
-                  onChange={handleInputChange}
-                />
-              </InputGroup>
-            </FormRow>
-            <FormRow>
-              <InputGroup>
-                <Label htmlFor="autorPreferido">Autor Preferido</Label>
-                <Input 
-                  id="autorPreferido"
-                  type="text" 
-                  placeholder="Ex: Machado de Assis, Agatha Christie, etc."
-                  value={formData.autorPreferido}
-                  onChange={handleInputChange}
-                />
-              </InputGroup>
-            </FormRow>
-            <FormRow>
-              <InputGroup>
-                <Label htmlFor="nivelLeitura">Nível de Leitura</Label>
-                <Input 
-                  id="nivelLeitura"
-                  type="text" 
-                  placeholder="Iniciante, Intermediário ou Avançado"
-                  value={formData.nivelLeitura}
-                  onChange={handleInputChange}
-                />
-              </InputGroup>
-            </FormRow>
-            <FormRow>
-              <InputGroup>
-                <Label htmlFor="biografia">Biografia (Opcional)</Label>
-                <Input 
-                  id="biografia"
-                  type="text" 
-                  placeholder="Conte um pouco sobre seus gostos literários..."
-                  value={formData.biografia}
-                  onChange={handleInputChange}
-                />
-              </InputGroup>
-            </FormRow>
-            <CheckboxGroup>
-              <Checkbox 
-                id="receberRecomendacoes"
-                type="checkbox"
-                checked={formData.receberRecomendacoes}
-                onChange={handleInputChange}
-              />
-              <Label htmlFor="receberRecomendacoes">Desejo receber recomendações</Label>
-            </CheckboxGroup>
-            <Button type="submit" disabled={loading}>
-              {loading ? "Criando conta..." : "Criar Conta"}
-            </Button>
-            <Link to="/">Já tem uma conta? Faça login</Link>
+                <Label htmlFor="receberRecomendacoes">Desejo receber recomendações personalizadas</Label>
+              </div>
+              
+              <div className={styles.submitSection}>
+                <Button 
+                  type="submit" 
+                  disabled={loading}
+                  className={styles.submitButton}
+                >
+                  {loading ? "Criando conta..." : "Criar Conta"}
+                </Button>
+                <div className={styles.loginLink}>
+                  <Link to="/">Já tem uma conta? Faça login</Link>
+                </div>
+              </div>
+            </div>
           </Form>
+          </div>
         </RightPage>
       </BookContainer>
       

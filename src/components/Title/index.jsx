@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export const Title = styled.h1`
   font-size: 3em;
-  margin-bottom: 30px;
+  margin-bottom: 12px;
   text-align: left;
   color: #6b4423;
   font-family: 'Crimson Text', serif;
