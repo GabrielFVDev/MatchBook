@@ -9,7 +9,6 @@ export default function Header() {
     const isProfilePage = location.pathname === "/profile";
 
     const handleLogout = () => {
-        // In a real application, you would clear user session/token here
         navigate("/");
     };
 
