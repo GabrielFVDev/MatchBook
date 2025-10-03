@@ -136,3 +136,114 @@ export const userService = {
     }
   }
 };
+
+// Serviços de recomendação
+export const recomendacaoService = {
+  // Obter recomendação adaptativa
+  async obterRecomendacaoAdaptativa(idUsuario) {
+    try {
+      const response = await api.get(`/recomendacao/getRecomendacaoAdaptativa/${idUsuario}`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Recomendações obtidas com sucesso!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao obter recomendações',
+        data: null
+      };
+    }
+  },
+
+  // Obter recomendação original
+  async obterRecomendacao(idUsuario) {
+    try {
+      const response = await api.get(`/recomendacao/getRecomendacao/${idUsuario}`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Recomendações obtidas com sucesso!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao obter recomendações',
+        data: null
+      };
+    }
+  },
+
+  // Registrar aceitação de livro
+  async aceitarLivro(idUsuario, idLivro) {
+    try {
+      const response = await api.post(`/recomendacao/aceitar?idUsuario=${idUsuario}&idLivro=${idLivro}`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Livro aceito com sucesso!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao aceitar livro',
+        data: null
+      };
+    }
+  },
+
+  // Registrar recusa de livro
+  async recusarLivro(idUsuario, idLivro) {
+    try {
+      const response = await api.post(`/recomendacao/recusar?idUsuario=${idUsuario}&idLivro=${idLivro}`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Livro recusado'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao recusar livro',
+        data: null
+      };
+    }
+  },
+
+  // Obter estatísticas do usuário
+  async obterEstatisticas(idUsuario) {
+    try {
+      const response = await api.get(`/recomendacao/estatisticas/${idUsuario}`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Estatísticas obtidas com sucesso!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao obter estatísticas',
+        data: null
+      };
+    }
+  },
+
+  // Resetar algoritmo
+  async resetarAlgoritmo(idUsuario) {
+    try {
+      const response = await api.post(`/recomendacao/resetarAlgoritmo/${idUsuario}`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Algoritmo resetado com sucesso!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao resetar algoritmo',
+        data: null
+      };
+    }
+  }
+};
