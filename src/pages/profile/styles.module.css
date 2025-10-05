@@ -117,13 +117,47 @@
   font-family: 'Crimson Text', serif;
   font-weight: 600;
   transition: all 0.3s ease;
-  margin-top: 20px;
+  min-width: 150px;
+  flex: 1;
 }
 
 .editButton:hover {
   background: linear-gradient(135deg, #8b5a2b 0%, #6b4423 100%);
   transform: translateY(-2px);
   box-shadow: 0 5px 20px rgba(107, 68, 35, 0.3);
+}
+
+/* Botões de ação */
+.actionButtons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.deleteButton {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1em;
+  cursor: pointer;
+  font-family: 'Crimson Text', serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 150px;
+  flex: 1;
+}
+
+.deleteButton:hover {
+  background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(231, 76, 60, 0.3);
 }
 
 .editForm {
@@ -267,6 +301,112 @@
 .closeButton:hover {
   background: #f0f0f0;
   color: #6b4423;
+}
+
+/* Modal de confirmação de exclusão */
+.deleteModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 20px;
+}
+
+.deleteModalContent {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  position: relative;
+  animation: slideInModal 0.3s ease-out;
+}
+
+.deleteModalHeader {
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.deleteModalTitle {
+  font-size: 1.8em;
+  color: #e74c3c;
+  font-family: 'Crimson Text', serif;
+  font-weight: 600;
+  margin: 0;
+}
+
+.deleteModalBody {
+  text-align: center;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.deleteModalBody p {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.deleteModalBody strong {
+  color: #e74c3c;
+}
+
+.deleteModalButtons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.cancelDeleteButton {
+  background: transparent;
+  color: #6b4423;
+  border: 2px solid #d4a574;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1em;
+  cursor: pointer;
+  font-family: 'Crimson Text', serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.cancelDeleteButton:hover {
+  background: #d4a574;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.confirmDeleteButton {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1em;
+  cursor: pointer;
+  font-family: 'Crimson Text', serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.confirmDeleteButton:hover {
+  background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(231, 76, 60, 0.3);
+}
+
+.confirmDeleteButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .saveButton {
@@ -470,5 +610,25 @@
   
   .statsContainer {
     margin-top: 20px;
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .editButton,
+  .deleteButton {
+    width: 100%;
+  }
+  
+  .deleteModalButtons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .cancelDeleteButton,
+  .confirmDeleteButton {
+    width: 100%;
   }
 }

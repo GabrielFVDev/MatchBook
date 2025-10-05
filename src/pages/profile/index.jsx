@@ -14,6 +14,7 @@ export default function ProfilePage() {
     const [editForm, setEditForm] = useState({});
     const [loading, setLoading] = useState(false);
     const [notification, setNotification] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     
     useEffect(() => {
         const currentUser = getCurrentUser();
@@ -84,7 +85,7 @@ export default function ProfilePage() {
                 });
                 
                 // Atualizar dados no localStorage se necessário
-                localStorage.setItem('user', JSON.stringify(response.data));
+                localStorage.setItem('usuario', JSON.stringify(response.data));
             } else {
                 throw new Error(response.error);
             }
@@ -101,6 +102,46 @@ export default function ProfilePage() {
 
     const closeNotification = () => {
         setNotification(null);
+    };
+
+    const handleDeleteAccount = () => {
+        setShowDeleteModal(true);
+    };
+
+    const confirmDeleteAccount = async () => {
+        if (!user?.id) return;
+
+        setLoading(true);
+        try {
+            // Aqui você pode implementar a API de exclusão
+            // const response = await userService.deletar(user.id);
+            
+            setNotification({
+                type: 'success',
+                title: 'Conta deletada',
+                message: 'Sua conta foi excluída com sucesso.'
+            });
+            
+            // Limpar dados locais e redirecionar
+            localStorage.removeItem('usuario');
+            localStorage.removeItem('token');
+            // Redirecionar para a página de login
+            window.location.href = '/';
+            
+        } catch (error) {
+            setNotification({
+                type: 'error',
+                title: 'Erro',
+                message: 'Erro ao deletar conta: ' + error.message
+            });
+        } finally {
+            setLoading(false);
+            setShowDeleteModal(false);
+        }
+    };
+
+    const cancelDeleteAccount = () => {
+        setShowDeleteModal(false);
     };
 
     if (!user) {
@@ -177,9 +218,14 @@ export default function ProfilePage() {
                             </div>
                         </div>
 
-                        <button className={styles.editButton} onClick={handleEditToggle}>
-                            ✏️ Editar Perfil
-                        </button>
+                        <div className={styles.actionButtons}>
+                            <button className={styles.editButton} onClick={handleEditToggle}>
+                                ✏️ Editar Perfil
+                            </button>
+                            <button className={styles.deleteButton} onClick={handleDeleteAccount}>
+                                🗑️ Deletar Conta
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -337,6 +383,41 @@ export default function ProfilePage() {
                                     {loading ? 'Salvando...' : 'Salvar'}
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de Confirmação de Exclusão */}
+            {showDeleteModal && (
+                <div className={styles.deleteModal} onClick={cancelDeleteAccount}>
+                    <div className={styles.deleteModalContent} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.deleteModalHeader}>
+                            <h2 className={styles.deleteModalTitle}>⚠️ Deletar Conta</h2>
+                        </div>
+                        
+                        <div className={styles.deleteModalBody}>
+                            <p>Tem certeza que deseja deletar sua conta?</p>
+                            <p><strong>Esta ação não pode ser desfeita!</strong></p>
+                            <p>Todos os seus dados, incluindo histórico de leituras e preferências, serão permanentemente removidos.</p>
+                        </div>
+
+                        <div className={styles.deleteModalButtons}>
+                            <button 
+                                className={styles.cancelDeleteButton} 
+                                onClick={cancelDeleteAccount}
+                                type="button"
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                className={styles.confirmDeleteButton} 
+                                onClick={confirmDeleteAccount}
+                                disabled={loading}
+                                type="button"
+                            >
+                                {loading ? 'Deletando...' : 'Sim, Deletar'}
+                            </button>
                         </div>
                     </div>
                 </div>
