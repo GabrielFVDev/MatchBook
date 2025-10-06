@@ -42,6 +42,7 @@ export default function MeusLivrosPage() {
   const [error, setError] = useState(null);
   const [notification, setNotification] = useState(null);
   const [filtroGenero, setFiltroGenero] = useState('todos');
+  const [imagensComErro, setImagensComErro] = useState(new Set());
 
   useEffect(() => {
     const user = getCurrentUser();
@@ -89,33 +90,26 @@ export default function MeusLivrosPage() {
     setNotification(null);
   };
 
-  const removerLivro = async (livroId, tituloLivro) => {
-    if (!usuario?.id) return;
+    const handleImageError = (livroId) => {
+    setImagensComErro(prev => new Set(prev).add(livroId));
+  };
 
+  const handleRemoverLivro = async (livroId) => {
     try {
-      const response = await recomendacaoService.descurtirLivro(usuario.id, livroId);
-      
-      if (response.success) {
-        setLivros(livrosAtuais => livrosAtuais.filter(livro => livro.id !== livroId));
-        setNotification({
-          type: 'success',
-          title: 'Livro removido',
-          message: `"${tituloLivro}" foi removido dos seus favoritos.`
-        });
-      } else {
-        setNotification({
-          type: 'error',
-          title: 'Erro',
-          message: response.error || 'Erro ao remover livro dos favoritos.'
-        });
-      }
-    } catch (err) {
-      console.error('Erro ao remover livro:', err);
+      setLoading(true);
+      await recomendacaoService.removerLivro(livroId);
       setNotification({
-        type: 'error',
-        title: 'Erro',
-        message: 'Erro ao remover livro. Tente novamente.'
+        tipo: 'sucesso',
+        mensagem: 'Livro removido dos favoritos com sucesso!'
       });
+      carregarLivros();
+    } catch (error) {
+      setNotification({
+        tipo: 'erro',
+        mensagem: error.message || 'Erro ao remover livro'
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -269,16 +263,25 @@ export default function MeusLivrosPage() {
                   <FaTrash />
                 </RemoveButton>
                 
-                {livro.capaUrl ? (
-                  <BookCover 
-                    src={livro.capaUrl} 
-                    alt={`Capa do livro ${livro.titulo}`}
-                  />
-                ) : (
-                  <BookCoverPlaceholder>
-                    📚<br/>Livro
-                  </BookCoverPlaceholder>
-                )}
+                {(() => {
+                  const capaUrl = livro.capaUrl || livro.capa || livro.imagem || livro.imagemUrl;
+                  
+                  if (imagensComErro.has(livro.id) || !capaUrl) {
+                    return (
+                      <BookCoverPlaceholder>
+                        📚<br/>Sem Capa
+                      </BookCoverPlaceholder>
+                    );
+                  }
+                  
+                  return (
+                    <BookCover 
+                      src={capaUrl} 
+                      alt={`Capa do livro ${livro.titulo}`}
+                      onError={() => handleImageError(livro.id)}
+                    />
+                  );
+                })()}
                 
                 <BookInfo>
                   <BookTitle>{livro.titulo}</BookTitle>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { NotificationModal } from "../../components/NotificationModal";
+import { SuccessModal } from "../../components/SuccessModal";
 import { FaBook, FaArrowLeft, FaPlus, FaImage, FaCheck } from 'react-icons/fa';
 import { useAuth } from "../../hooks/useAuth";
 import { livroService, recomendacaoService } from "../../apis/services";
@@ -33,6 +34,8 @@ export default function AdicionarLivroPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successBookTitle, setSuccessBookTitle] = useState('');
   
   const [formData, setFormData] = useState({
     titulo: '',
@@ -197,10 +200,23 @@ export default function AdicionarLivroPage() {
           const favoritoResponse = await recomendacaoService.curtirLivro(usuario.id, livroId);
           
           if (favoritoResponse.success) {
-            setNotification({
-              type: 'success',
-              title: 'Livro Adicionado! 📚❤️',
-              message: `"${formData.titulo}" foi adicionado ao catálogo e aos seus favoritos!`
+            // Mostrar modal de sucesso ao invés de notificação simples
+            setSuccessBookTitle(formData.titulo);
+            setShowSuccessModal(true);
+            
+            // Limpar formulário
+            setFormData({
+              titulo: '',
+              autor: '',
+              editora: '',
+              genero: '',
+              anoPublicacao: '',
+              numeroPaginas: '',
+              idioma: 'Português',
+              isbn: '',
+              sinopse: '',
+              capaUrl: '',
+              disponivel: true
             });
           } else {
             // Se falhar ao adicionar aos favoritos, ainda é sucesso parcial
@@ -210,6 +226,10 @@ export default function AdicionarLivroPage() {
               message: `"${formData.titulo}" foi adicionado ao catálogo com sucesso!`
             });
             console.warn('Erro ao adicionar aos favoritos:', favoritoResponse.error);
+            
+            setTimeout(() => {
+              navigate('/meus-livros');
+            }, 2000);
           }
         } catch (favoritoError) {
           // Se falhar ao adicionar aos favoritos, ainda é sucesso parcial
@@ -219,12 +239,11 @@ export default function AdicionarLivroPage() {
             title: 'Livro Adicionado! 📚',
             message: `"${formData.titulo}" foi adicionado ao catálogo com sucesso!`
           });
+          
+          setTimeout(() => {
+            navigate('/meus-livros');
+          }, 2000);
         }
-
-        // Limpar formulário após 3 segundos e voltar
-        setTimeout(() => {
-          navigate('/meus-livros'); // Navegar para meus livros para ver o livro adicionado
-        }, 3000);
       } else {
         setNotification({
           type: 'error',
@@ -250,6 +269,21 @@ export default function AdicionarLivroPage() {
 
   const fecharNotificacao = () => {
     setNotification(null);
+  };
+
+  const handleViewFavorites = () => {
+    setShowSuccessModal(false);
+    navigate('/meus-livros');
+  };
+
+  const handleAddAnother = () => {
+    setShowSuccessModal(false);
+    // O formulário já foi limpo, apenas fechar o modal
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    navigate('/home');
   };
 
   return (
@@ -522,6 +556,14 @@ export default function AdicionarLivroPage() {
           onClose={fecharNotificacao}
         />
       )}
+
+      <SuccessModal
+        isOpen={showSuccessModal}
+        bookTitle={successBookTitle}
+        onClose={handleCloseSuccessModal}
+        onViewFavorites={handleViewFavorites}
+        onAddAnother={handleAddAnother}
+      />
     </PageContainer>
   );
 }
