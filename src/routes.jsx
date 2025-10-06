@@ -4,6 +4,7 @@ import LoginPage from "./pages/auth/login";
 import CadastroPage from "./pages/auth/cadastro";
 import HomePage from "./pages/home";
 import ProfilePage from "./pages/profile";
+import MeusLivrosPage from "./pages/meus-livros";
 import { ProtectedRoute, PublicRoute } from "./components/ProtectedRoute";
 
 export default function AppRoutes() {
@@ -28,6 +29,11 @@ export default function AppRoutes() {
         <Route path="/profile" element={
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/meus-livros" element={
+          <ProtectedRoute>
+            <MeusLivrosPage />
           </ProtectedRoute>
         } />
         {/* <Route path="/about" element={<About />} /> */}

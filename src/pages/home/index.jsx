@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { NotificationModal } from "../../components/NotificationModal";
 import {
@@ -34,6 +35,7 @@ import { recomendacaoService } from "../../apis/services";
 
 export default function HomePage() {
   const { getCurrentUser } = useAuth();
+  const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
   const [showQuiz, setShowQuiz] = useState(false);
   const [currentBook, setCurrentBook] = useState(null);
@@ -42,11 +44,28 @@ export default function HomePage() {
   const [notification, setNotification] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [totalLivrosCurtidos, setTotalLivrosCurtidos] = useState(0);
 
   useEffect(() => {
     const user = getCurrentUser();
     setUsuario(user);
+    if (user?.id) {
+      carregarContadorLivrosCurtidos(user.id);
+    }
   }, []);
+
+  // Função para carregar contador de livros curtidos
+  const carregarContadorLivrosCurtidos = async (idUsuario) => {
+    try {
+      const response = await recomendacaoService.contarLivrosCurtidos(idUsuario);
+      if (response.success) {
+        setTotalLivrosCurtidos(response.data.total || 0);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar contador de livros curtidos:', err);
+      setTotalLivrosCurtidos(0);
+    }
+  };
 
   // Função para iniciar o quiz
   const iniciarQuiz = async () => {
@@ -91,9 +110,21 @@ export default function HomePage() {
     setIsProcessing(true);
     
     try {
-      const response = await recomendacaoService.aceitarLivro(usuario.id, currentBook.id);
+      // 1. Aceitar livro no sistema de recomendação
+      const responseAceitar = await recomendacaoService.aceitarLivro(usuario.id, currentBook.id);
       
-      if (response.success) {
+      if (responseAceitar.success) {
+        // 2. Também salvar como livro curtido
+        try {
+          await recomendacaoService.curtirLivro(usuario.id, currentBook.id);
+          console.log('✅ Livro também salvo como curtido');
+          // Incrementar contador local
+          setTotalLivrosCurtidos(prev => prev + 1);
+        } catch (curtirError) {
+          console.warn('⚠️ Erro ao salvar como curtido, mas livro foi aceito:', curtirError);
+          // Não interrompe o fluxo se o curtir falhar
+        }
+        
         setNotification({
           type: 'success',
           title: 'Ótima escolha! 📚',
@@ -105,7 +136,7 @@ export default function HomePage() {
           carregarProximaRecomendacao();
         }, 1500);
       } else {
-        throw new Error(response.error);
+        throw new Error(responseAceitar.error);
       }
     } catch (err) {
       console.error('Erro ao aceitar livro:', err);
@@ -174,6 +205,11 @@ export default function HomePage() {
     setNotification(null);
   };
 
+  // Função para navegar para livros favoritos
+  const verMeusLivros = () => {
+    navigate('/meus-livros');
+  };
+
   if (!usuario) {
     return (
       <PageContainer>
@@ -199,8 +235,7 @@ export default function HomePage() {
                           color: '#666',
                           textAlign: 'center'
                         }}>
-                          Gênero favorito: {usuario.generoFavorito || 'Não informado'} <br />
-                          Livros lidos: {usuario.livrosLidos || 0} livros
+                          Livros curtidos: {totalLivrosCurtidos} livros ❤️
                         </div>
                         <QuestionIcon>
                             <FaQuestion />
@@ -209,7 +244,9 @@ export default function HomePage() {
                             <PrimaryButton onClick={iniciarQuiz}>
                                 Começar Quiz
                             </PrimaryButton>
-                            
+                            <SecondaryButton onClick={verMeusLivros}>
+                                Meus Livros Favoritos
+                            </SecondaryButton>
                         </ActionButtons>
                     </BookDiscoveryCard>
                 ) : (

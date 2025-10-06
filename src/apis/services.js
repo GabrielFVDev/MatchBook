@@ -245,5 +245,114 @@ export const recomendacaoService = {
         data: null
       };
     }
+  },
+
+  // Obter livros curtidos pelo usuário
+  async obterLivrosCurtidos(idUsuario) {
+    try {
+      const response = await api.get(`/livros-curtidos/usuario/${idUsuario}`);
+      
+      // Se retornar 204 (No Content), significa que não há livros curtidos
+      if (response.status === 204) {
+        return {
+          success: true,
+          data: [],
+          message: 'Nenhum livro curtido encontrado'
+        };
+      }
+      
+      return {
+        success: true,
+        data: response.data,
+        message: 'Livros curtidos obtidos com sucesso!'
+      };
+    } catch (error) {
+      // Se erro 404 ou 204, retorna lista vazia ao invés de erro
+      if (error.response?.status === 404 || error.response?.status === 204) {
+        return {
+          success: true,
+          data: [],
+          message: 'Nenhum livro curtido encontrado'
+        };
+      }
+      
+      return {
+        success: false,
+        error: error.message || 'Erro ao obter livros curtidos',
+        data: null
+      };
+    }
+  },
+
+  // Curtir um livro
+  async curtirLivro(idUsuario, idLivro) {
+    try {
+      const response = await api.post(`/livros-curtidos/curtir?usuarioId=${idUsuario}&livroId=${idLivro}`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Livro curtido com sucesso!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao curtir livro',
+        data: null
+      };
+    }
+  },
+
+  // Descurtir um livro
+  async descurtirLivro(idUsuario, idLivro) {
+    try {
+      const response = await api.delete(`/livros-curtidos/descurtir?usuarioId=${idUsuario}&livroId=${idLivro}`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Livro removido dos curtidos!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao remover livro dos curtidos',
+        data: null
+      };
+    }
+  },
+
+  // Verificar se um livro está curtido
+  async verificarLivroCurtido(idUsuario, idLivro) {
+    try {
+      const response = await api.get(`/livros-curtidos/usuario/${idUsuario}/livro/${idLivro}`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Status verificado com sucesso!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao verificar status do livro',
+        data: { curtido: false }
+      };
+    }
+  },
+
+  // Contar livros curtidos
+  async contarLivrosCurtidos(idUsuario) {
+    try {
+      const response = await api.get(`/livros-curtidos/usuario/${idUsuario}/contador`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Contador obtido com sucesso!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao obter contador de livros curtidos',
+        data: { total: 0 }
+      };
+    }
   }
 };

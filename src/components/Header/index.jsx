@@ -1,14 +1,14 @@
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HeaderContainer, Logo, IconWrapper, LogoutButton, NavigationContainer } from "./styles.module.jsx";
-import { FaUser, FaHome, FaSignOutAlt } from "react-icons/fa";
+import { FaUser, FaHome, FaSignOutAlt, FaHeart } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function Header() {
     const location = useLocation();
     const navigate = useNavigate();
     const { logout } = useAuth();
-    const isProfilePage = location.pathname === "/profile";
+    const currentPath = location.pathname;
 
     const handleLogout = () => {
         logout();
@@ -19,14 +19,22 @@ export default function Header() {
         <HeaderContainer>
             <Logo to="/">Matchbook</Logo>
             <NavigationContainer>
-                {isProfilePage ? (
-                    <Link to="/home">
+                {currentPath !== "/home" && (
+                    <Link to="/home" title="Início">
                         <IconWrapper>
                             <FaHome />
                         </IconWrapper>
                     </Link>
-                ) : (
-                    <Link to="/profile">
+                )}
+                {currentPath !== "/meus-livros" && (
+                    <Link to="/meus-livros" title="Meus Livros Favoritos">
+                        <IconWrapper>
+                            <FaHeart />
+                        </IconWrapper>
+                    </Link>
+                )}
+                {currentPath !== "/profile" && (
+                    <Link to="/profile" title="Perfil">
                         <IconWrapper>
                             <FaUser />
                         </IconWrapper>
