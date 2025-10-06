@@ -4,17 +4,14 @@ import { Link } from 'react-router-dom';
 
 // Reutilizando de home/styles.module.jsx
 export const PageContainer = styled.main`
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   background: linear-gradient(135deg, #2d1b69 0%, #1a1a2e 50%, #0f0f23 100%);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto; /* Permitir scroll */
+  padding-top: 80px; /* Espaço para o header fixo */
   position: relative;
 `;
 
 export const MainContent = styled.div`
-  flex: 1;
   padding: 40px;
   max-width: 1200px;
   margin: 0 auto;

@@ -210,6 +210,11 @@ export default function HomePage() {
     navigate('/meus-livros');
   };
 
+  // Função para navegar para adicionar livro
+  const adicionarLivro = () => {
+    navigate('/adicionar-livro');
+  };
+
   if (!usuario) {
     return (
       <PageContainer>
@@ -246,6 +251,12 @@ export default function HomePage() {
                             </PrimaryButton>
                             <SecondaryButton onClick={verMeusLivros}>
                                 Meus Livros Favoritos
+                            </SecondaryButton>
+                            <SecondaryButton onClick={adicionarLivro} style={{ 
+                              background: 'linear-gradient(135deg, #27ae60 0%, #219a52 100%)',
+                              color: 'white'
+                            }}>
+                                📚 Adicionar Livro
                             </SecondaryButton>
                         </ActionButtons>
                     </BookDiscoveryCard>

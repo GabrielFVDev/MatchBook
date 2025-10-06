@@ -29,18 +29,35 @@ export const IconWrapper = styled.div`
     height: 40px;
     border-radius: 50%;
     cursor: pointer;
-    border: 2px solid #d4a574;
+    border: 2px solid ${props => props.isActive ? '#667eea' : '#d4a574'};
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5em;
-    color: #6b4423;
+    color: ${props => props.isActive ? '#fff' : '#6b4423'};
+    background: ${props => {
+        if (props.isActive && props.isAddButton) return 'linear-gradient(135deg, #27ae60 0%, #219a52 100%)';
+        if (props.isActive) return 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        if (props.isAddButton) return 'linear-gradient(135deg, #27ae60 0%, #219a52 100%)';
+        return 'transparent';
+    }};
     transition: all 0.3s ease;
 
     &:hover {
-        background-color: #f0f0f0;
+        background: ${props => {
+            if (props.isActive && props.isAddButton) return 'linear-gradient(135deg, #219a52 0%, #1e8449 100%)';
+            if (props.isActive) return 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)';
+            if (props.isAddButton) return 'linear-gradient(135deg, #27ae60 0%, #219a52 100%)';
+            return '#f0f0f0';
+        }};
         transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
+
+    ${props => props.isAddButton && `
+        color: #fff;
+        border-color: #27ae60;
+    `}
 `;
 
 export const NavigationContainer = styled.div`

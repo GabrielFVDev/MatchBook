@@ -242,9 +242,20 @@ export default function MeusLivrosPage() {
               }
             </EmptyDescription>
             {filtroGenero === 'todos' && (
-              <BackButton onClick={voltarParaHome}>
-                Descobrir Livros
-              </BackButton>
+              <>
+                <BackButton onClick={voltarParaHome}>
+                  Descobrir Livros
+                </BackButton>
+                <BackButton 
+                  onClick={() => navigate('/adicionar-livro')} 
+                  style={{ 
+                    background: 'linear-gradient(135deg, #27ae60 0%, #219a52 100%)',
+                    marginTop: '10px'
+                  }}
+                >
+                  📚 Adicionar Livro ao Catálogo
+                </BackButton>
+              </>
             )}
           </EmptyState>
         ) : (

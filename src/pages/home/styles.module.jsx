@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
 export const PageContainer = styled.main`
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   background: linear-gradient(135deg, #2d1b69 0%, #1a1a2e 50%, #0f0f23 100%);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   position: relative;
+  padding-top: 80px; /* Espaço para o header fixo */
 `;
 
 export const MainContent = styled.div`
@@ -16,6 +16,7 @@ export const MainContent = styled.div`
   align-items: center;
   justify-content: center;
   padding: 40px;
+  min-height: calc(100vh - 80px); /* Ajuste para o header fixo */
   background: 
     radial-gradient(ellipse at center, rgba(248, 245, 240, 0.1) 0%, transparent 70%),
     linear-gradient(45deg, transparent 25%, rgba(248, 245, 240, 0.02) 25%),

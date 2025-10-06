@@ -356,3 +356,78 @@ export const recomendacaoService = {
     }
   }
 };
+
+// Serviços de livros
+export const livroService = {
+  // Criar novo livro
+  async criar(livroData) {
+    try {
+      const response = await api.post('/livro/create', livroData);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Livro adicionado com sucesso!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao adicionar livro',
+        data: null
+      };
+    }
+  },
+
+  // Buscar todos os livros
+  async buscarTodos() {
+    try {
+      const response = await api.get('/livro/all');
+      return {
+        success: true,
+        data: response.data,
+        message: 'Livros carregados!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao carregar livros',
+        data: []
+      };
+    }
+  },
+
+  // Buscar livro por ID
+  async buscarPorId(id) {
+    try {
+      const response = await api.get(`/livro/get?id=${id}`);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Livro encontrado!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao buscar livro',
+        data: null
+      };
+    }
+  },
+
+  // Atualizar livro
+  async atualizar(livroData) {
+    try {
+      const response = await api.put('/livro/update', livroData);
+      return {
+        success: true,
+        data: response.data,
+        message: 'Livro atualizado com sucesso!'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Erro ao atualizar livro',
+        data: null
+      };
+    }
+  }
+};
